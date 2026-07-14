@@ -5,7 +5,7 @@ Goal Planner Agent - analyzes the user's stated financial goal and
 generates a savings target with a milestone plan.
 """
 
-from agents.groq_client import call_llm
+from agents.llm_client import call_llm
 from prompts import GOAL_AGENT_PROMPT, COMMON_STYLE_GUIDE
 
 
@@ -20,7 +20,8 @@ def run(profile: dict) -> str:
         monthly_income=profile["monthly_income"],
         monthly_expenses=profile["monthly_expenses"],
         current_savings=profile["current_savings"],
+        existing_investments=profile["existing_investments"],
         financial_goal=profile["financial_goal"],
         style_guide=COMMON_STYLE_GUIDE,
     )
-    return call_llm(prompt, api_key=profile.get("api_key"))
+    return call_llm(prompt, ai_provider=profile.get("ai_provider", "groq"), api_key=profile.get("api_key"))

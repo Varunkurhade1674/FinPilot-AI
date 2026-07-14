@@ -5,7 +5,7 @@ Budget Planner Agent - analyzes income vs expenses and recommends
 a savings target and budgeting improvements.
 """
 
-from agents.groq_client import call_llm
+from agents.llm_client import call_llm
 from prompts import BUDGET_AGENT_PROMPT, COMMON_STYLE_GUIDE
 
 
@@ -21,4 +21,4 @@ def run(profile: dict) -> str:
         current_savings=profile["current_savings"],
         style_guide=COMMON_STYLE_GUIDE,
     )
-    return call_llm(prompt, api_key=profile.get("api_key"))
+    return call_llm(prompt, ai_provider=profile.get("ai_provider", "groq"), api_key=profile.get("api_key"))

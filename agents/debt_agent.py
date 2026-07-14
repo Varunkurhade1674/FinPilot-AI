@@ -5,7 +5,7 @@ Debt Advisor Agent - analyzes loans/EMIs and recommends a repayment
 and debt reduction strategy.
 """
 
-from agents.groq_client import call_llm
+from agents.llm_client import call_llm
 from prompts import DEBT_AGENT_PROMPT, COMMON_STYLE_GUIDE
 
 
@@ -21,4 +21,4 @@ def run(profile: dict) -> str:
         monthly_emi=profile["monthly_emi"],
         style_guide=COMMON_STYLE_GUIDE,
     )
-    return call_llm(prompt, api_key=profile.get("api_key"))
+    return call_llm(prompt, ai_provider=profile.get("ai_provider", "groq"), api_key=profile.get("api_key"))

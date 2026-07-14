@@ -139,11 +139,33 @@ function buildFullMarkdown(data) {
   );
 }
 
+const aiProviderSelect = document.getElementById("ai_provider");
+const apiKeyInput = document.getElementById("api_key");
+const apiKeyHelp = document.getElementById("api_key_help");
+
+const providerDetails = {
+  groq: { placeholder: "gsk_...", text: 'Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.' },
+  openai: { placeholder: "sk-...", text: 'Get an API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.' },
+  gemini: { placeholder: "AIza...", text: 'Get an API key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>.' },
+  anthropic: { placeholder: "sk-ant-...", text: 'Get an API key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.' }
+};
+
+if(aiProviderSelect) {
+  aiProviderSelect.addEventListener("change", (e) => {
+    const details = providerDetails[e.target.value];
+    if(details) {
+      apiKeyInput.placeholder = details.placeholder;
+      apiKeyHelp.innerHTML = details.text;
+    }
+  });
+}
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
   const payload = {
+    ai_provider: formData.get("ai_provider"),
     api_key: formData.get("api_key"),
     name: formData.get("name"),
     age: parseInt(formData.get("age"), 10),

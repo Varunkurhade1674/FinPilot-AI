@@ -48,6 +48,7 @@ class FinancialProfile(BaseModel):
     monthly_emi: float = Field(..., ge=0)
     financial_goal: str = Field(..., min_length=1)
     risk_preference: str = Field(..., pattern="^(Low|Medium|High)$")
+    ai_provider: str = Field(default="groq")
     api_key: str = Field(default="")
 
 

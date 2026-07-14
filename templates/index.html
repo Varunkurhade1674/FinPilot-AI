@@ -35,10 +35,21 @@
     <p class="panel-sub">Fill this in once — five agents will analyze it together.</p>
 
     <form id="profile-form">
-      <div class="field">
-        <label for="api_key">Groq API Key</label>
-        <input type="password" id="api_key" name="api_key" required placeholder="gsk_...">
-        <small style="display: block; margin-top: 4px; font-size: 0.8rem; color: #666;">Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.</small>
+      <div class="field-row">
+        <div class="field">
+          <label for="ai_provider">AI Provider</label>
+          <select id="ai_provider" name="ai_provider" required>
+            <option value="groq" selected>Groq (Llama 3.3)</option>
+            <option value="openai">OpenAI (GPT-4o-mini)</option>
+            <option value="gemini">Google Gemini (1.5 Flash)</option>
+            <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="api_key">API Key</label>
+          <input type="password" id="api_key" name="api_key" required placeholder="gsk_...">
+          <small id="api_key_help" style="display: block; margin-top: 4px; font-size: 0.8rem; color: #666;">Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.</small>
+        </div>
       </div>
 
       <div class="field-row">

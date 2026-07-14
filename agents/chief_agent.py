@@ -6,7 +6,7 @@ specialist agents into one final report, complete with a Financial
 Health Score and top actionable recommendations.
 """
 
-from agents.groq_client import call_llm
+from agents.llm_client import call_llm
 from prompts import CHIEF_AGENT_PROMPT, COMMON_STYLE_GUIDE
 
 
@@ -35,4 +35,4 @@ def run(profile: dict, budget_report: str, investment_report: str,
         style_guide=COMMON_STYLE_GUIDE,
     )
     # Chief report is longer (it consolidates everything), so allow more tokens.
-    return call_llm(prompt, api_key=profile.get("api_key"), temperature=0.4, max_tokens=1100)
+    return call_llm(prompt, ai_provider=profile.get("ai_provider", "groq"), api_key=profile.get("api_key"), temperature=0.4, max_tokens=1100)
