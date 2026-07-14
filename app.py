@@ -99,7 +99,7 @@ async def generate_report(profile: FinancialProfile):
             goal_report,
         )
 
-    except RuntimeError as exc:
+    except Exception as exc:
         # Surfaces a clean, readable error (e.g. missing/invalid API key)
         return JSONResponse(status_code=500, content={"error": str(exc)})
 

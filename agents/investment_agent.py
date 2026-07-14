@@ -17,9 +17,9 @@ def run(profile: dict) -> str:
     prompt = INVESTMENT_AGENT_PROMPT.format(
         name=profile["name"],
         age=profile["age"],
+        monthly_income=profile["monthly_income"],
         current_savings=profile["current_savings"],
         existing_investments=profile["existing_investments"],
-        financial_goal=profile["financial_goal"],
         risk_preference=profile["risk_preference"],
         style_guide=COMMON_STYLE_GUIDE,
     )

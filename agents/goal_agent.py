@@ -20,7 +20,6 @@ def run(profile: dict) -> str:
         monthly_income=profile["monthly_income"],
         monthly_expenses=profile["monthly_expenses"],
         current_savings=profile["current_savings"],
-        existing_investments=profile["existing_investments"],
         financial_goal=profile["financial_goal"],
         style_guide=COMMON_STYLE_GUIDE,
     )
