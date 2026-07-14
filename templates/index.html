@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinPilot AI &mdash; Multi-Agent Financial Advisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">FP</span>
+    <div class="brand-text">
+      <h1>FinPilot <em>AI</em></h1>
+      <p>Multi-Agent Financial Advisor</p>
+    </div>
+  </div>
+  <div class="agent-strip" aria-hidden="true">
+    <span>01 Budget</span>
+    <span>02 Investment</span>
+    <span>03 Debt</span>
+    <span>04 Goal</span>
+    <span class="chief">05 Chief Advisor</span>
+  </div>
+</header>
+
+<main class="dashboard">
+
+  <!-- LEFT: Input Form -->
+  <section class="panel form-panel">
+    <h2>Your Financial Profile</h2>
+    <p class="panel-sub">Fill this in once — five agents will analyze it together.</p>
+
+    <form id="profile-form">
+      <div class="field">
+        <label for="api_key">Groq API Key</label>
+        <input type="password" id="api_key" name="api_key" required placeholder="gsk_...">
+        <small style="display: block; margin-top: 4px; font-size: 0.8rem; color: #666;">Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.</small>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="e.g. Aditi Sharma">
+        </div>
+        <div class="field field-small">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" required min="1" max="119" placeholder="28">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="monthly_income">Monthly Income (₹)</label>
+          <input type="number" id="monthly_income" name="monthly_income" required min="0" step="0.01" placeholder="80000">
+        </div>
+        <div class="field">
+          <label for="monthly_expenses">Monthly Expenses (₹)</label>
+          <input type="number" id="monthly_expenses" name="monthly_expenses" required min="0" step="0.01" placeholder="45000">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="current_savings">Current Savings (₹)</label>
+          <input type="number" id="current_savings" name="current_savings" required min="0" step="0.01" placeholder="200000">
+        </div>
+        <div class="field">
+          <label for="existing_investments">Existing Investments (₹)</label>
+          <input type="number" id="existing_investments" name="existing_investments" required min="0" step="0.01" placeholder="150000">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="total_loan">Total Loan Amount (₹)</label>
+          <input type="number" id="total_loan" name="total_loan" required min="0" step="0.01" placeholder="500000">
+        </div>
+        <div class="field">
+          <label for="monthly_emi">Monthly EMI (₹)</label>
+          <input type="number" id="monthly_emi" name="monthly_emi" required min="0" step="0.01" placeholder="12000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="financial_goal">Financial Goal</label>
+        <input type="text" id="financial_goal" name="financial_goal" required placeholder="e.g. Buy a home in 5 years, budget ₹40L">
+      </div>
+
+      <div class="field">
+        <label for="risk_preference">Risk Preference</label>
+        <select id="risk_preference" name="risk_preference" required>
+          <option value="Low">Low — capital protection first</option>
+          <option value="Medium" selected>Medium — balanced growth</option>
+          <option value="High">High — growth focused</option>
+        </select>
+      </div>
+
+      <button type="submit" id="submit-btn" class="primary-btn">
+        <span class="btn-label">Generate Financial Report</span>
+      </button>
+    </form>
+  </section>
+
+  <!-- RIGHT: Report Output -->
+  <section class="panel report-panel">
+
+    <div id="empty-state" class="empty-state">
+      <div class="empty-glyph">₹</div>
+      <h3>Your report will appear here</h3>
+      <p>Complete the form and five specialist AI agents will build your personalized financial plan.</p>
+    </div>
+
+    <div id="loading-state" class="loading-state hidden">
+      <div class="loader-ring"></div>
+      <p id="loading-text">Budget Planner Agent is reviewing your income &amp; expenses…</p>
+    </div>
+
+    <div id="error-state" class="error-state hidden">
+      <h3>Something went wrong</h3>
+      <p id="error-text"></p>
+    </div>
+
+    <div id="report-content" class="report-content hidden">
+
+      <div class="report-header">
+        <div>
+          <h2 id="report-name">Financial Report</h2>
+          <p id="report-date" class="report-date"></p>
+        </div>
+        <div class="report-actions">
+          <button id="copy-btn" class="ghost-btn" type="button">Copy Report</button>
+          <button id="download-btn" class="ghost-btn" type="button">Download .md</button>
+        </div>
+      </div>
+
+      <div class="score-block">
+        <div class="score-gauge" id="score-gauge">
+          <div class="score-gauge-inner">
+            <span id="score-value">--</span>
+            <small>/ 100</small>
+          </div>
+        </div>
+        <div class="score-caption">
+          <span class="eyebrow">Financial Health Score</span>
+          <p id="score-label">Calculated by the Chief Financial Advisor from your budget, debt, investment and goal analysis.</p>
+        </div>
+      </div>
+
+      <div class="report-body" id="final-report-body"></div>
+
+      <details class="agent-detail">
+        <summary>Budget Planner Agent — full analysis</summary>
+        <div id="budget-body" class="agent-body"></div>
+      </details>
+
+      <details class="agent-detail">
+        <summary>Investment Advisor Agent — full analysis</summary>
+        <div id="investment-body" class="agent-body"></div>
+      </details>
+
+      <details class="agent-detail">
+        <summary>Debt Advisor Agent — full analysis</summary>
+        <div id="debt-body" class="agent-body"></div>
+      </details>
+
+      <details class="agent-detail">
+        <summary>Goal Planner Agent — full analysis</summary>
+        <div id="goal-body" class="agent-body"></div>
+      </details>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  <p>FinPilot AI runs entirely on FastAPI + Groq (Llama 3.3). No data leaves this server except to the Groq API.</p>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
