@@ -1,88 +1,64 @@
 # FinPilot AI — Multi-Agent Financial Advisor
 
-FinPilot AI is a compact, production-ready web application where **five
-collaborating AI agents** analyze a user's financial profile and produce a
-personalized, consolidated financial plan — built entirely on **FastAPI**,
-**Jinja2**, vanilla **HTML/CSS/JS**, and the **Groq API (Llama 3.3)**.
+FinPilot AI is a production-ready, highly aesthetic web application where **five collaborating AI agents** analyze a user's financial profile and produce a personalized, consolidated financial plan. It is built entirely on **FastAPI**, **Jinja2**, and vanilla **HTML/CSS/JS**, featuring a stunning **Dynamic Vibrant UI** with playful animations and glassmorphism panels.
 
-No database, no auth, no external financial APIs, no deployment tooling —
-just a clean multi-agent pipeline you can run locally in minutes.
+It features **multi-LLM support**, allowing you to seamlessly switch between **Groq**, **OpenAI**, **Google Gemini**, **Anthropic**, and **OpenRouter** directly from the dashboard!
+
+No database, no auth, no external financial APIs, no deployment tooling — just a beautiful, clean multi-agent pipeline you can run locally in minutes.
 
 ---
 
-## Project Overview
+## 🚀 Features
 
-A user fills out a single financial profile form (income, expenses, savings,
-investments, loans, goals, and risk preference). That profile is sent to a
-pipeline of five specialized AI agents:
-
-1. **Budget Planner Agent** — analyzes income vs. expenses and recommends a savings target.
-2. **Investment Advisor Agent** — analyzes risk profile and recommends an asset allocation.
-3. **Debt Advisor Agent** — analyzes loans/EMIs and recommends a repayment strategy.
-4. **Goal Planner Agent** — turns a stated financial goal into a savings target and milestones.
-5. **Chief Financial Advisor** — consolidates all four reports into one final report, complete
-   with a **Financial Health Score (0–100)** and a **Top 5 Actionable Recommendations** list.
-
-The result is rendered in a two-panel dashboard: inputs on the left, the
-generated report (with a live score gauge) on the right.
+- 🧠 **Multi-Agent Pipeline**: 5 specialized AI agents, each with its own reusable prompt template.
+- ⚡ **Concurrent Execution**: Specialist agents run concurrently (via `asyncio.gather` + threads) for blazing fast analysis.
+- 🤖 **Bring Your Own AI**: Built-in support for Groq (Llama 3.3), OpenAI (GPT-4o), Google Gemini (1.5), Anthropic (Claude 3.5), and OpenRouter. Switch effortlessly via a dropdown.
+- 🔑 **Live Key Validation**: Verify your API keys instantly from the UI with an embedded check button.
+- 🎨 **Dynamic Vibrant UI**: A radically modern, eye-catching interface featuring an animated gradient background, frosted glass panels, pill buttons, and responsive spring animations.
+- 📊 **Animated Health Score**: Beautiful dynamic gauge (0–100) that physically counts up.
+- 📝 **Export Options**: Copy your consolidated final report to the clipboard or download it directly as a `.md` Markdown file. Auto-saves to the `reports/` directory.
+- 🎯 **Clean Error Handling**: Invalid API keys or connection errors show friendly inline alerts.
 
 ---
 
-## Features
+## 🏗️ Agent Workflow
 
-- 🧠 5 specialized AI agents, each with its own reusable prompt template
-- ⚡ Specialist agents run **concurrently** (via `asyncio.gather` + threads) for speed
-- 📊 Animated **Financial Health Score** gauge (0–100)
-- 📝 Consolidated final report + collapsible per-agent detail sections
-- 📋 **Copy Report** button (clipboard) and **Download as Markdown** button
-- 💾 Every generated report is also auto-saved to `reports/` as a `.md` file
-- 🎯 Clean error handling — a missing/invalid Groq API key shows a friendly message instead of a crash
-- 📱 Fully responsive layout (desktop → tablet → mobile)
-- 🚫 No React, no database, no auth, no Docker, no paid UI libraries
-
----
-
-## Agent Workflow
-
-```
+```text
                      ┌─────────────────────┐
-                     │   User Financial     │
-                     │       Profile        │
-                     └──────────┬───────────┘
+                     │   User Financial    │
+                     │       Profile       │
+                     └──────────┬──────────┘
                                 │
           ┌─────────────┬───────┼────────┬─────────────┐
-          ▼             ▼       ▼         ▼             ▼
+          ▼             ▼       ▼        ▼             ▼
    ┌─────────────┐┌──────────┐┌────────┐┌────────────┐
    │   Budget    ││Investment││  Debt  ││    Goal    │  (run concurrently)
    │   Planner   ││ Advisor  ││Advisor ││  Planner   │
    └──────┬──────┘└────┬─────┘└───┬────┘└──────┬─────┘
           │            │          │            │
           └────────────┴────┬─────┴────────────┘
-                             ▼
-                  ┌───────────────────────┐
-                  │  Chief Financial      │
-                  │  Advisor (synthesis)  │
-                  │  → Health Score       │
-                  │  → Top 5 Actions      │
-                  │  → Final Report       │
-                  └───────────────────────┘
+                            ▼
+                 ┌───────────────────────┐
+                 │  Chief Financial      │
+                 │  Advisor (synthesis)  │
+                 │  → Health Score       │
+                 │  → Top 5 Actions      │
+                 │  → Final Report       │
+                 └───────────────────────┘
 ```
 
-Each specialist agent calls the Groq API independently with its own focused
-prompt (see `prompts.py`). The Chief Financial Advisor agent receives the
-user's raw profile *plus* all four specialist outputs, and produces the
-final synthesized Markdown report shown in the UI.
+Each specialist agent calls your selected LLM API independently. The **Chief Financial Advisor** agent receives the user's raw profile *plus* all four specialist outputs, and synthesizes them into the final actionable Markdown report.
 
 ---
 
-## Folder Structure
+## 📂 Folder Structure
 
-```
+```text
 FinPilot-AI/
 │
 ├── agents/
 │   ├── __init__.py
-│   ├── groq_client.py       # Shared Groq API wrapper used by every agent
+│   ├── llm_client.py        # Generic LLM router (Groq, OpenAI, Gemini, Anthropic)
 │   ├── budget_agent.py      # Budget Planner Agent
 │   ├── investment_agent.py  # Investment Advisor Agent
 │   ├── debt_agent.py        # Debt Advisor Agent
@@ -90,42 +66,40 @@ FinPilot-AI/
 │   └── chief_agent.py       # Chief Financial Advisor Agent
 │
 ├── templates/
-│   └── index.html           # Dashboard (form + report panel)
+│   └── index.html           # Dynamic Vibrant Dashboard (form + report panel)
 │
 ├── static/
-│   ├── style.css            # Design system + responsive layout
-│   └── script.js            # Form handling, Markdown rendering, score gauge
+│   ├── style.css            # Stunning gradient/glassmorphism design system
+│   └── script.js            # UI interactions, API Key validation, Markdown rendering
 │
 ├── reports/                 # Auto-saved Markdown reports (gitignored)
 │
-├── app.py                   # FastAPI application & API endpoint
-├── prompts.py                # All agent prompt templates
+├── app.py                   # FastAPI backend & endpoints
+├── prompts.py               # Prompt engineering templates for each agent
 ├── requirements.txt
-├── .env.example
-├── .gitignore
 └── README.md
 ```
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Layer          | Technology                          |
 |----------------|--------------------------------------|
 | Backend        | Python 3.10+, FastAPI, Uvicorn       |
 | Templating     | Jinja2                               |
-| Frontend       | HTML5, CSS3, vanilla JavaScript      |
-| AI / LLM       | Groq API — Llama 3.3 70B Versatile   |
-| Config         | python-dotenv                        |
+| Frontend       | HTML5, CSS3 (Custom Properties), vanilla JS |
+| AI / LLM       | SDKs: `openai`, `google-genai`, `anthropic`, `groq` |
 | Validation     | Pydantic                             |
 
 ---
 
-## Installation
+## ⚡ Installation
 
-1. **Clone / copy the project**
+1. **Clone the repository**
 
    ```bash
+   git clone https://github.com/Varunkurhade1674/FinPilot-AI.git
    cd FinPilot-AI
    ```
 
@@ -142,73 +116,45 @@ FinPilot-AI/
    pip install -r requirements.txt
    ```
 
-4. **Configure your Groq API key**
-
+4. **Environment Variables (Optional but recommended)**
+   
+   If you want the API keys to be automatically detected instead of typing them into the UI, create a `.env` file and add your keys:
    ```bash
-   cp .env.example .env
+   GROQ_API_KEY=your_groq_key
+   OPENAI_API_KEY=your_openai_key
+   GEMINI_API_KEY=your_gemini_key
+   ANTHROPIC_API_KEY=your_anthropic_key
+   OPENROUTER_API_KEY=your_openrouter_key
    ```
-
-   Then open `.env` and set:
-
-   ```
-   GROQ_API_KEY=your_real_groq_api_key
-   ```
-
-   You can get a free key at [console.groq.com/keys](https://console.groq.com/keys).
+   *Note: You can always just paste your key directly into the web UI when using the app.*
 
 ---
 
-## Running the Application
+## 🚀 Running the Application
+
+Start the FastAPI server:
 
 ```bash
 python app.py
 ```
 
-or, equivalently:
-
-```bash
-uvicorn app:app --reload --port 8000
-```
-
 Then open your browser at:
-
-```
-http://localhost:8000
-```
+**[http://localhost:8000](http://localhost:8000)**
 
 ---
 
-## Example Usage
+## 💡 Example Usage
 
-1. Fill out the form on the left: name, age, income, expenses, savings,
-   investments, loan amount, EMI, financial goal, and risk preference.
-2. Click **Generate Financial Report**.
-3. Watch the rotating status messages as each agent runs (Budget → Investment
-   → Debt → Goal → Chief Advisor).
-4. Review your **Financial Health Score**, the consolidated report, and the
-   **Top 5 Actionable Recommendations**.
-5. Expand any of the four collapsible sections to see each specialist
-   agent's full analysis.
-6. Use **Copy Report** to copy the full Markdown to your clipboard, or
-   **Download .md** to save it locally. A copy is also automatically saved
-   to the `reports/` folder on the server.
+1. **Select your AI**: Use the dropdown in the UI to select your preferred AI Provider (e.g., Groq, OpenAI).
+2. **Verify your Key**: Paste your API key into the field and click the **Verify** button embedded in the input box to ensure it's valid.
+3. **Fill your Profile**: Enter your income, expenses, savings, investments, loan amount, EMI, financial goal, and risk preference.
+4. **Generate**: Click **Generate Financial Report**.
+5. **Watch the Magic**: See the gorgeous shimmering loader as each agent runs.
+6. **Review & Export**: Review your **Financial Health Score** (watch the counter animation!), read the consolidated report, and use the **Download .md** button to save it locally.
 
 ---
 
-## Future Enhancements
+## 📝 Notes
 
-- Multi-currency support and locale-aware number formatting
-- Historical report comparison (track Financial Health Score over time)
-- Export report as PDF in addition to Markdown
-- Optional chat-style follow-up questions to each individual agent
-- Streaming agent responses token-by-token instead of waiting for completion
-- Configurable agent models (e.g. swap Llama 3.3 for another Groq-hosted model)
-
----
-
-## Notes
-
-- This project intentionally avoids a database, authentication, and
-  external financial data providers to stay lightweight and fast to run.
-- All financial figures are treated as illustrative user input — this is a
-  planning/advisory tool, not a real-time market data or brokerage product.
+- This project intentionally avoids a database and authentication to stay lightweight and fast to run.
+- All financial figures are treated as illustrative user input — this is a planning/advisory tool, not real-time financial market advice.
