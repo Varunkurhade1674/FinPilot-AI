@@ -58,6 +58,19 @@ async def home(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 
+class APIKeyCheck(BaseModel):
+    ai_provider: str
+    api_key: str
+
+@app.post("/api/validate-key")
+async def validate_key(payload: APIKeyCheck):
+    from agents.llm_client import validate_api_key
+    try:
+        await asyncio.to_thread(validate_api_key, payload.ai_provider, payload.api_key)
+        return JSONResponse(content={"status": "valid"})
+    except Exception as exc:
+        return JSONResponse(status_code=400, content={"error": str(exc)})
+
 @app.post("/api/generate-report")
 async def generate_report(profile: FinancialProfile):
     """

@@ -161,6 +161,51 @@ if(aiProviderSelect) {
   });
 }
 
+const checkKeyBtn = document.getElementById("check-key-btn");
+const apiKeyStatus = document.getElementById("api_key_status");
+
+if (checkKeyBtn) {
+  checkKeyBtn.addEventListener("click", async () => {
+    const provider = aiProviderSelect.value;
+    const key = apiKeyInput.value.trim();
+    if (!key) {
+      apiKeyStatus.style.display = "block";
+      apiKeyStatus.style.color = "red";
+      apiKeyStatus.textContent = "Please enter an API key first.";
+      return;
+    }
+
+    checkKeyBtn.disabled = true;
+    checkKeyBtn.textContent = "Checking...";
+    apiKeyStatus.style.display = "none";
+
+    try {
+      const response = await fetch("/api/validate-key", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ai_provider: provider, api_key: key })
+      });
+      const data = await response.json();
+      
+      apiKeyStatus.style.display = "block";
+      if (response.ok && data.status === "valid") {
+        apiKeyStatus.style.color = "green";
+        apiKeyStatus.textContent = "✓ API Key is valid!";
+      } else {
+        apiKeyStatus.style.color = "red";
+        apiKeyStatus.textContent = "✗ Invalid Key: " + (data.error || "Request failed");
+      }
+    } catch (err) {
+      apiKeyStatus.style.display = "block";
+      apiKeyStatus.style.color = "red";
+      apiKeyStatus.textContent = "✗ Connection error.";
+    } finally {
+      checkKeyBtn.disabled = false;
+      checkKeyBtn.textContent = "Check Key";
+    }
+  });
+}
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 

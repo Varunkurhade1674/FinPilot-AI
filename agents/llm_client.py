@@ -59,6 +59,7 @@ def call_llm(prompt: str, ai_provider: str = "groq", api_key: str = None, temper
             return response.text.strip()
 
         elif ai_provider == "anthropic":
+            # pyrefly: ignore [missing-import]
             from anthropic import Anthropic
             client = Anthropic(api_key=api_key)
             response = client.messages.create(
@@ -88,3 +89,14 @@ def call_llm(prompt: str, ai_provider: str = "groq", api_key: str = None, temper
 
     except Exception as exc:
         raise RuntimeError(f"{ai_provider.capitalize()} API request failed: {exc}") from exc
+
+def validate_api_key(ai_provider: str, api_key: str) -> bool:
+    """
+    Tests if the given API key is valid for the specified provider
+    by sending a minimal prompt. Raises RuntimeError if invalid.
+    """
+    try:
+        call_llm("Say 'OK'", ai_provider, api_key, max_tokens=5)
+        return True
+    except Exception as exc:
+        raise RuntimeError(str(exc))

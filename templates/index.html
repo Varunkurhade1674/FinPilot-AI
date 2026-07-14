@@ -48,8 +48,12 @@
         </div>
         <div class="field">
           <label for="api_key">API Key</label>
-          <input type="password" id="api_key" name="api_key" required placeholder="gsk_...">
+          <div style="display: flex; gap: 8px;">
+            <input type="password" id="api_key" name="api_key" required placeholder="gsk_..." style="flex: 1;">
+            <button type="button" id="check-key-btn" class="ghost-btn" style="white-space: nowrap;">Check Key</button>
+          </div>
           <small id="api_key_help" style="display: block; margin-top: 4px; font-size: 0.8rem; color: #666;">Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.</small>
+          <small id="api_key_status" style="display: none; margin-top: 4px; font-size: 0.85rem; font-weight: 600;"></small>
         </div>
       </div>
 
