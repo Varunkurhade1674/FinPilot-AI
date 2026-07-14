@@ -115,12 +115,30 @@ function extractScore(text) {
 function animateGauge(score) {
   const gauge = document.getElementById("score-gauge");
   const valueEl = document.getElementById("score-value");
+  
   if (score === null) {
     valueEl.textContent = "N/A";
     gauge.style.setProperty("--score-percent", 0);
     return;
   }
-  valueEl.textContent = score;
+
+  // Animate the counter
+  let startTimestamp = null;
+  const duration = 1500;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    // easeOutExpo
+    const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    valueEl.textContent = Math.floor(easeProgress * score);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      valueEl.textContent = score;
+    }
+  };
+  window.requestAnimationFrame(step);
+
   // Animate via a short transition on the CSS custom property.
   requestAnimationFrame(() => {
     gauge.style.setProperty("--score-percent", score);
