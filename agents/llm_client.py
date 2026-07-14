@@ -19,6 +19,8 @@ def call_llm(prompt: str, ai_provider: str = "groq", api_key: str = None, temper
             api_key = os.getenv("GEMINI_API_KEY")
         elif ai_provider == "anthropic":
             api_key = os.getenv("ANTHROPIC_API_KEY")
+        elif ai_provider == "openrouter":
+            api_key = os.getenv("OPENROUTER_API_KEY")
 
     if not api_key:
         raise RuntimeError(f"API key is not provided for {ai_provider}. Please enter a valid API key in the form.")
@@ -66,6 +68,20 @@ def call_llm(prompt: str, ai_provider: str = "groq", api_key: str = None, temper
                 max_tokens=max_tokens,
             )
             return response.content[0].text.strip()
+
+        elif ai_provider == "openrouter":
+            from openai import OpenAI
+            client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=api_key,
+            )
+            response = client.chat.completions.create(
+                model="meta-llama/llama-3.3-70b-instruct",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            return response.choices[0].message.content.strip()
 
         else:
             raise RuntimeError(f"Unknown AI Provider: {ai_provider}")

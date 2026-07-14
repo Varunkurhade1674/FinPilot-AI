@@ -147,7 +147,8 @@ const providerDetails = {
   groq: { placeholder: "gsk_...", text: 'Get a free API key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>.' },
   openai: { placeholder: "sk-...", text: 'Get an API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>.' },
   gemini: { placeholder: "AIza...", text: 'Get an API key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>.' },
-  anthropic: { placeholder: "sk-ant-...", text: 'Get an API key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.' }
+  anthropic: { placeholder: "sk-ant-...", text: 'Get an API key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>.' },
+  openrouter: { placeholder: "sk-or-v1-...", text: 'Get an API key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai</a>.' }
 };
 
 if(aiProviderSelect) {
