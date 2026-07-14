@@ -201,6 +201,63 @@ input:focus, select:focus {
 .primary-btn:active { transform: scale(0.99); }
 .primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* ---------- Input embedded button ---------- */
+.input-with-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-with-button input {
+  width: 100%;
+  padding-right: 90px;
+  margin-bottom: 0;
+  background: var(--surface-sunken);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.input-with-button input:focus {
+  background: var(--surface);
+  border-color: var(--teal);
+  box-shadow: 0 4px 16px rgba(15, 110, 94, 0.08);
+}
+
+.check-key-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--teal);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.check-key-btn:hover {
+  background: var(--teal-tint);
+}
+
+.check-key-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.check-key-btn:disabled {
+  color: var(--ink-faint);
+  background: transparent;
+  cursor: not-allowed;
+}
+
 /* ---------- Report panel states ---------- */
 
 .report-panel {
